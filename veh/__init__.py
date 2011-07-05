@@ -34,7 +34,7 @@ import re
 
 from mercurial import hg, ui, error
 
-from veh import clone
+import clonevirtualenv as clone
 
 VENV_DIR = '.venvs'
 ACTIVEFILE = '.active'
