@@ -74,8 +74,9 @@ def newvenv_operation_wrapper(repo, op,
        make_active=True, delete_old=False, **kw):
     """Wrapper function for performing operations with new virtualenvs.
 
-    Calls op with the repo, the path to the new virtualenv, and any
-    other keyword arguments passed to the wrapper.
+    Calls op with the repo, the path to the new virtualenv, the path
+    of the existing active virtualenv, and any other keyword arguments
+    passed to the wrapper.
 
     After op() finishes the wrapper will make the new virtualenv active
     if make_active is true and will delete the old virtualenv if
@@ -84,9 +85,14 @@ def newvenv_operation_wrapper(repo, op,
     """
     active = venvdirops.get_active_venv(repo)
     d = new_venv_dirname(repo)
-    op(repo, d, **kw)
+    try:
+        op(repo, d, **kw)
+    except Exception, e:
+        if os.path.exists(d):
+            shutil.rmtree(d)
+        raise
     if make_active:
-        make_venv_active(repo, d)
+        make_venv_active(repo, d, active)
         if delete_old and active:
             remove_venv(repo, active)
     return d

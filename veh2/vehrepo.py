@@ -16,15 +16,16 @@ class VehRepo(object):
         self.root = repo.root
 
     def build_new_venv(self, rev=None, sitepackages=False, delete_old=False):
-        def do_build(self, d):
+        def do_build(self, d, active):
             virtualenv.create_environment(d, sitepackages=sitepackages)
             venvrcops.install_rc_file(self, d)
         venvdirops.newvenv_operation_wrapper(self, do_build,
             delete_old=delete_old)
 
     def clone_new_venv(self, delete_old=False):
-        def do_clone(self, d):
-            raise NotImplementedError()
+        def do_clone(self, newvenv, active):
+            clone.clone_virtualenv(active, newvenv)
+            venvrcops.install_rc_file(self, newvenv)
         venvdirops.newvenv_operation_wrapper(self, do_build,
             delete_old=delete_old)
 
