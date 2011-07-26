@@ -38,11 +38,14 @@ def make_venv_active(repo, venv):
     "Make the given virtualenv the active one for the repo."
     venvdir = get_venv_dir(repo)
     activefile = get_active_symlink(repo)
-    tmpfile = "%s.tmp" % activefile
-    if os.path.exists(tmpfile):
-        raise Exception('tmpfile %r exists.' % tmpfile)
-    os.symlink(venv, tmpfile)
-    os.rename(tmpfile, activefile)
+    if os.path.exists(activefile):
+        tmpfile = "%s.tmp" % activefile
+        if os.path.exists(tmpfile):
+            raise Exception('tmpfile %r exists.' % tmpfile)
+        os.symlink(venv, tmpfile)
+        os.rename(tmpfile, activefile)
+    else:
+        os.symlink(venv, activefile)
 
 
 def new_venv_dirname(repo):
