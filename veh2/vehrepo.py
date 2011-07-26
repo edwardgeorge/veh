@@ -33,7 +33,10 @@ class VehRepo(object):
         raise NotImplementedError()
 
     def exec_python(self, command):
-        raise NotImplementedError()
+        active = venvdirops.get_active_venv(self)
+        # need to check we have an active venv
+        python = os.path.join(active, 'bin', 'python')
+        os.execv(python, ['python'] + command)
 
     def shell(self, command=None):
         raise NotImplementedError()
